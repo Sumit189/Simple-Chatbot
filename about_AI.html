@@ -1,0 +1,372 @@
+<html>
+            <head>
+                <title>AI Chatbot</title>
+                <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+                <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
+            </head>
+    <body onload=default_msg()>
+        <div id="top">
+            <h2 id="foo"></h2>
+            </div>
+        </div>
+        <div id="bottom">
+               <input type="text" id="input" placeholder="Write your message...">
+                <img src="about_send.png" onclick="usercmd()" id="btn">
+                <center><img src="about_off.png" onclick="speaker_toggle()" id="mybtn"</center>
+
+        </div>
+    </body>
+    <style>
+        h2{
+            font-family: 'Open Sans', sans-serif;
+            font-weight: normal;
+        }
+    #top{
+        overflow-y: auto;
+        height:80vh;
+        width:98vw;
+        overflow: scroll;
+        border-radius: 5%;
+        background:#ffffff4d;
+        display: flex;
+        flex-direction: column-reverse;
+    }
+    ::-webkit-scrollbar{
+		width:0px;
+		background: transparent;
+	}
+	::-webkit-scrollbar-thumb{
+		background: #FF0000;
+	}
+    #bottom{
+        margin-top: 7%;
+        border-radius:5%;
+        height:20vh;
+        width:98vw;
+        background: transparent;
+    }
+    body{font-family: 'Open Sans', sans-serif;
+	}
+    #btn{
+    margin-top: 0.3%;
+    z-index: 99;
+    height:50px ;
+    width: 50px;
+    float:right;
+    outline: none;
+    border-radius: 50%;
+    }
+    #inputbox{
+        bottom: 1px;
+    }
+    #input{
+    outline: none;
+    border-radius: 25px;
+    border: 2px solid #545454;
+    padding: 20px;
+    width: 86vw;
+    height: 50px;
+    }
+li{
+    font-family: 'Open Sans', sans-serif;
+}
+
+.container {
+  border: 2px solid #dedede;
+  background-color: #f1f1f1;
+  border-radius: 20px;
+  padding: 10px;
+  font-size: 18px;
+  width: 90vw;
+  margin: 10px 0;
+
+}
+
+.darker {
+  border-color: #ccc;
+  background-color: #ddd;
+  font-size: 18px;
+}
+
+.container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.container img {
+  float: left;
+  max-width: 60px;
+  width: 100%;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+.container img.right {
+  float: right;
+  margin-left: 20px;
+  margin-right:0;
+}
+#btn:hover{
+    background-color: #111111;
+}
+#speaker2{
+    width: 40px;
+    height: 40px;
+}
+
+#mybtn{
+    height:50px ;
+    border-radius:50% ;
+    width: 50px;
+}
+#mybtn:hover{
+    background: #000;
+}
+    </style>
+    <script>
+
+    function usercmd(){
+        var cmd=document.getElementById("input").value;
+        dothat(cmd);
+    }
+    function dothat(cmd){
+        m = [];
+        var i=0;
+        m[i]='<li style="list-style-type:none"><div class="container" id="frstuser"><img src="about_user.png" alt="Avatar"><p id="user">'+cmd+'</p></div></li>';
+        document.getElementById("input").value="";  
+        document.getElementById('foo').innerHTML+=m;
+        clearInterval(interval);
+        ai(cmd);
+    }
+
+    var interval;
+    var sound=0;
+    var first_run=0;
+    var list_bot_count=1;
+    var starters=["Samosa","Pakora","Paneer tikka","Kachori","Medu vada","Vegetable kofta","Spring rolls","Falafel","Oats dokhla","Kurkuri bhindi","Palak chaat","Roasted tomato soup","Corn chat","Tandoori aloo","Masala papad"];
+    // var main_courses=[];  put the main course here.
+    var desserts=["Tiramisu","Chocolate mousse","Honey cheesecake","Maple snickerdoodle","Gulab jamun","Jalebi","Ghujiya","Ghajar ka halwa","Ladoo","Ada pradhaman","Barfi","Pazhampori","Kheer","Rasmalai","Kaju katli"];
+    var timings=["Monday to Friday: 1:00PM to 8:00 PM","SAT-SUN: 1:00PM to 11:00PM"];
+    function ai(cmd){
+        m = '<li style="list-style-type:none"><div class="container darker" id="bot_"><img src="about_bot.png" alt="Avatar" class="right"><p id="bot'+list_bot_count+'"></p></div></li>';
+        document.getElementById('foo').innerHTML+=m;
+        list_bot_count+=1;
+        var hello_words=["hello","hi","hey","hello bot","hello there"];
+        var bot_hello_words=["Hello Customer.","Hello there.. How can I help you.","Hi. Please Enter your query...","Hello, Please ask your Question."];
+        var greeting_response=["fine","good","awesome","i need help"];
+        var bot_greeting_response=["Great, How can I help?"];
+        var bot_bye_response=["Good Bye... Have a Nice Day...","Thanks for using our service...","We hope we helped you with your query."];
+        var time_issues=['Whats the timing for Dinner?',"When restuarent opens?","Whats the time?"]
+        var i=0;
+        var torun=1;
+        var speed = 30;
+        var io=0;
+        bot_id=0;
+        text_res="...";
+        function typeWriter() {
+             if (io < text_res.length) {
+                 if(io==0){
+                    if(sound==1){
+                     speakit();
+                }
+                 }
+                if(text_res[io]=="\n"){
+                    document.getElementById("bot"+bot_id).innerText+="\n";
+                }
+                else{
+                document.getElementById("bot"+bot_id).innerHTML+=text_res.charAt(io);
+                }
+                io++;
+                setTimeout(typeWriter, speed);
+                }
+                else{
+                   
+                }
+        }
+
+        
+        for(i;i<hello_words.length;i++){
+            if(cmd.localeCompare(hello_words[i])==0){
+                min=0;
+                max=3;
+                random_response=Math.floor(Math.random() * (+max - +min)) + +min;
+               torun=0;
+               text_res=bot_hello_words[random_response];
+               io=0;
+               bot_id=list_bot_count-1;
+               typeWriter();  
+            }
+        }
+        if(torun){
+            for(i;i<hello_words.length;i++){
+            if(cmd.localeCompare(greeting_response)==0){
+                min=0;
+                max=0;
+               random_response=Math.floor(Math.random() * (+max - +min)) + +min;  
+               text_res=bot_greeting_response[random_response];
+               io=0;
+               torun=0;
+               bot_id=list_bot_count-1;
+               typeWriter();  
+            }
+        }
+        
+        }
+        if(torun){
+            if(cmd.includes("time" )|| cmd.includes("timing")){
+            text_r='Timing is as follow:\n ';
+            var ik=0;
+            for(ik;ik<timings.length;ik++){
+                text_r+=timings[ik]+"\n ";
+            }
+            text_res=text_r;
+            io=0;
+            bot_id=list_bot_count-1;
+            typeWriter();
+            torun=0;
+            }
+        }
+        if(torun){
+            if(cmd.includes("menu") || cmd.includes("dishes")){
+            text_res="Choose one of the following:\n1.Starters\n2.Main Course\n3.Desserts";
+            io=0;
+            bot_id=list_bot_count-1;
+            typeWriter();
+            torun=0;   
+            }
+        }
+        if(torun){
+            if(cmd=='1' || cmd.includes("starters") || cmd.includes("Starters")){
+                var text_to_pass="These are the Starters:\n";
+                var i=0;
+                for(i;i<starters.length;i++){
+                    if(i==starters.length-1){
+                        text_to_pass+=(i+1)+". "+starters[i]+".";    
+                    }
+                    else{
+                    text_to_pass+=(i+1)+". "+starters[i]+"\n";
+                    }
+                }
+                text_res=text_to_pass;
+                io=0;
+                bot_id=list_bot_count-1;
+                typeWriter();
+                torun=0;
+            }
+        }
+        if(torun){
+            if(cmd==3 || cmd.includes("desserts") || cmd.includes("Desserts")){
+                var i=0;
+                var text_to_pass="These are the Desserts:\n";
+                for(i;i<desserts.length;i++){
+                    if(i==desserts.length-1){
+                    text_to_pass+=(i+1)+". "+desserts[i]+".";
+                }
+                else{
+                    text_to_pass+=(i+1)+". "+desserts[i]+"\n";
+                }
+                }
+                text_res=text_to_pass;
+                io=0;
+                bot_id=list_bot_count-1;
+                typeWriter();
+                torun=0;
+            }
+        }
+        if(torun){
+            if(cmd==2 || cmd.includes("Main course") || cmd.includes("course")){
+                var text_to_pass="Main course Includes:\n";
+                for(i;i<main_courses.length;i++){
+                    if(i==main_courses.length-1){
+                    text_to_pass+=(i+1)+". "+main_courses[i]+".";
+                    }
+                    else{
+                        text_to_pass+=(i+1)+". "+main_courses[i]+"\n";
+                    }
+                    }
+                    text_res=text_to_pass;
+                io=0;
+                bot_id=list_bot_count-1;
+                typeWriter();
+                torun=0;
+            }
+        }
+        if(torun){
+            if(cmd.includes("what can you do") || cmd.includes("help") || cmd.includes("commands")){
+                text_res="You can ask me about Menu, Timing and other questions related to our Restuarant."
+                io=0;
+                bot_id=list_bot_count-1;
+                torun=0;
+                typeWriter();
+            }
+        }
+        if(torun){
+            if(cmd.includes("bye") || cmd.includes("Thanks") || cmd.includes("Thank you")){
+                min=0;
+                max=3;
+                random_response=Math.floor(Math.random() * (+max - +min)) + +min;
+                text_res=bot_bye_response[random_response];
+                io=0;
+                bot_id=list_bot_count-1;
+                torun=0;
+                typeWriter();
+            }
+        }
+        if(torun){
+            if(cmd.includes("Who made you") || cmd.includes("Who created you") || cmd.includes("created by")){
+                text_res="It is Sumit who made me with all his efforts."
+                io=0;
+                bot_id=list_bot_count-1;
+                torun=0;
+                typeWriter();
+            }
+        }
+        if(torun){
+            text_res="Sorry! Requested query is not available..."
+            io=0;
+            bot_id=list_bot_count-1;
+            torun=0;
+            typeWriter();
+        }
+    }
+    function speakit(){
+        responsiveVoice.speak(""+text_res+"","US English Female");
+    }
+    function speaker_toggle(){
+        if(sound==0){
+            sound=1;
+            document.getElementById("mybtn").src="about_on.png";
+            responsiveVoice.speak("Speech Turned ON","US English Female");
+        }
+        else{
+            sound=0;
+            document.getElementById("mybtn").src="about_off.png";
+            responsiveVoice.speak("Speech Turned OFF","US English Female");
+        }
+    }
+    var jo;
+    var speed2=50;
+    function typeWriter_default(){
+             if (jo < text_res.length) {
+                document.getElementById("bot"+bot_id).innerHTML+=text_res.charAt(jo);
+                jo++;
+                interval=setTimeout(typeWriter_default, speed2);
+                }
+                else{
+                    if(sound==1){
+                     speakit();
+                }
+                }
+        }
+    function default_msg(){
+        m = '<li style="list-style-type:none"><div class="container darker"><img src="about_bot.png" alt="Avatar" class="right"><p id="bot0"></p></div></li>';
+        document.getElementById('foo').innerHTML+=m;
+        bot_id=0;
+        text_res="Hi there, I am your Assistant you can ask me your queries...";
+        jo=0;
+        typeWriter_default();
+    }
+
+    </script>
+</html>
